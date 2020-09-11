@@ -87,25 +87,25 @@ public class MySQLLimitPlugin extends PluginAdapter {
 
 	@Override
 	public boolean sqlMapUpdateByExampleSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-		element.addElement(generateUpdateAndDeleteLimitElement());
+		element.addElement(generateUpdateLimitElement());
 		return true;
 	}
 
 	@Override
 	public boolean sqlMapUpdateByExampleWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-		element.addElement(generateUpdateAndDeleteLimitElement());
+		element.addElement(generateUpdateLimitElement());
 		return true;
 	}
 
 	@Override
 	public boolean sqlMapUpdateByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-		element.addElement(generateUpdateAndDeleteLimitElement());
+		element.addElement(generateUpdateLimitElement());
 		return true;
 	}
 
 	@Override
 	public boolean sqlMapDeleteByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-		element.addElement(generateUpdateAndDeleteLimitElement());
+		element.addElement(generateDeleteLimitElement());
 		return true;
 	}
 
@@ -126,7 +126,14 @@ public class MySQLLimitPlugin extends PluginAdapter {
 		return ifLimitNotNullElement;
 	}
 
-	private XmlElement generateUpdateAndDeleteLimitElement() {
+	private XmlElement generateUpdateLimitElement() {
+		XmlElement ifLimitNotNullElement = new XmlElement("if");
+		ifLimitNotNullElement.addAttribute(new Attribute("test", "example.limit != null"));
+		ifLimitNotNullElement.addElement(new TextElement("limit ${example.limit}"));
+		return ifLimitNotNullElement;
+	}
+
+	private XmlElement generateDeleteLimitElement() {
 		XmlElement ifLimitNotNullElement = new XmlElement("if");
 		ifLimitNotNullElement.addAttribute(new Attribute("test", "limit != null"));
 		ifLimitNotNullElement.addElement(new TextElement("limit ${limit}"));
